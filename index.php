@@ -1,11 +1,11 @@
 <?php
     include('config/db_connect.php');
 
-    if(isset($_GET['submit'])){
-        echo $_GET['email'];
-        echo $_GET['message'];
-        echo $_GET['email'];
-        echo $_GET['date'];
+    if(isset($_POST['submit'])){
+        echo $_POST['email'];
+        echo $_POST['message'];
+        echo $_POST['email'];
+        echo $_POST['date'];
     }
 ?>
 
@@ -200,7 +200,7 @@
                     metus.</p>
             </div>
             <div class="col s12 l5 offset-l2">
-                <form action="index.php" method="GET">
+                <form action="index.php" method="POST">
                     <div class="input-field">
                         <i class="material-icons prefix">email</i>
                         <input type="email" id="email" name="email">

@@ -1,11 +1,66 @@
 <?php
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
     include('config/db_connect.php');
 
+    $email = $title = $date = $message = '';
+    $errors = array('email'=>'', 'date'=>'');
+
     if(isset($_POST['submit'])){
-        echo $_POST['email'];
-        echo $_POST['message'];
-        echo $_POST['email'];
-        echo $_POST['date'];
+
+        if(empty($_POST['email'])){
+            $errors['email'] = 'An email is required';
+        } else {
+            $email = $_POST['email'];
+        }
+        if(empty($_POST['date'])){
+            $errors['date'] = 'A date is required';
+        } else {
+            $date = $_POST['date'];
+        }
+        if(isset($_POST['message'])){
+            $message = $_POST['message'];
+        }
+
+        if(count($errors) > 0){
+            foreach($errors as $error){
+                // echo $error . '<br />';
+            }
+        } else {
+            $email = mysqli_real_escape_string($conn, $_POST['email']);
+            $message = mysqli_real_escape_string($conn, $_POST['message']);
+            $date_input = mysqli_real_escape_string($conn, $_POST['date']);
+            $date = date('Y-m-d', strtotime($date_input));
+            $photo = isset($_POST['photo']) ? 1 : 0;
+            $edit = isset($_POST['editing']) ? 1 : 0;
+
+            $sql = "INSERT INTO customers(email,message,date,photo,editing) VALUES ('$email', '$message', '$date', '$photo', '$edit')";
+
+            if(mysqli_query($conn, $sql)){
+                header('Location: success.php');
+                exit();
+            } else {
+                echo 'query error: ' . mysqli_error($conn);
+            }
+        }
+    }
+
+    if(isset($_POST['calculate'])){
+
+        if(empty($_POST['x_value'])){
+            $errors['x_value'] = 'An x value is required';
+        } else {
+            $x = escapeshellarg($_POST['x_value']);
+            $output = shell_exec("./cos_calc $x");
+            echo "<p>cos($x) = $output</p>";
+        }
+
+        if(count($errors) > 0){
+            foreach($errors as $error){
+                // echo $error . '<br />';
+            }
+        }
     }
 ?>
 
@@ -67,20 +122,20 @@
                     <li><a href="#photos">Photos</a></li>
                     <li><a href="#services">Services</a></li>
                     <li><a href="#contact">Contact</a></li>
-                    <li><a href="" class="tooltipped btn-floating btn-small orange deep-orange darken-4"
-                            data-tooltip="Instagram">
-                            <i class="fab fa-instagram"></i>
+                    <li><a href="https://www.linkedin.com/in/mariia-sharkovska-578729273/" class="tooltipped btn-floating btn-small orange deep-orange darken-4"
+                            data-tooltip="Linkedin">
+                            <i class="fab fa-linkedin"></i>
                         </a></li>
                     <li>
-                        <a href="" class="tooltipped btn-floating btn-small orange  deep-orange darken-4"
-                            data-tooltip="Facebook">
-                            <i class="fab fa-facebook"></i>
+                        <a href="https://github.com/mariiasharkovskaya" class="tooltipped btn-floating btn-small orange  deep-orange darken-4"
+                            data-tooltip="GitHub">
+                            <i class="fab fa-github"></i>
                         </a>
                     </li>
                     <li>
                         <a href="" class="tooltipped btn-floating btn-small orange  deep-orange darken-4"
-                            data-tooltip="Twitter">
-                            <i class="fab fa-twitter"></i>
+                            data-tooltip="Instagram">
+                            <i class="fab fa-instagram"></i>
                         </a>
                     </li>
                 </ul>
@@ -150,13 +205,14 @@
             <div class="col s12 l6 offset-l2">
                 <ul class="tabs">
                     <li class="tab col s6">
-                        <a href="#photography" class="grey-text text-darken-4">Photography</a>
+                        <!-- <a href="#photography" class="grey-text text-darken-4">Photography</a> -->
+                         <a href="#taylor" class="grey-text text-darken-4">Taylor series</a>
                     </li>
                     <li class="tab col s6">
                         <a href="#editing" class="grey-text text-darken-4">Editing</a>
                     </li>
                 </ul>
-                <div class="col s12" id="photography">
+                <!-- <div class="col s12" id="photography">
                     <p class="flow-text grey-text text-darken-4">PHOTOGRAPHY</p>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae
                         finibus mi, egestas dignissim metus. Fusce tempus elementum metus.
@@ -166,7 +222,20 @@
                         finibus mi, egestas dignissim metus. Fusce tempus elementum metus.
                         Donec eu nibh fringilla, dignissim arcu eu, ultrices ante. Cras
                         consectetur risus id mi condimentum aliquam.</p>
-                </div>
+                </div> -->
+                <form action="index.php" method="POST">
+                    <div class="col s12" id="taylor">
+                        <p class="flow-text grey-text text-darken-4">Calculate cos(x)</p>
+                        <div class="input-field">
+                            <i class="material-icons prefix">x_value</i>
+                            <input type="number" id="x_value" name="x_value" step="any" value="<?php echo htmlspecialchars($x_value) ?>">
+                            <label for="x_value">Enter x</label>
+                        </div>
+                        <div class="input-text center">
+                            <button class="btn" name="calculate">Calculate</button>
+                        </div>
+                    </div>
+                </form>
                 <div class="col s12" id="editing">
                     <p class="flow-text grey-text text-darken-4">EDITING</p>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae
@@ -203,17 +272,19 @@
                 <form action="index.php" method="POST">
                     <div class="input-field">
                         <i class="material-icons prefix">email</i>
-                        <input type="email" id="email" name="email">
+                        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email) ?>">
                         <label for="email">Your Email</label>
+                        <div class="red-text"><?php echo $errors['email']; ?></div>
                     </div>
                     <div class="input-field">
                         <i class="material-icons prefix">message</i>
-                        <textarea id="message" class="materialize-textarea" name="message"></textarea>
-                        <label for="message">Your Message</label>
+                        <textarea id="message" class="materialize-textarea" name="message"><?php echo htmlspecialchars($message) ?></textarea>
+                        <label class="active" for="message">Your Message</label>
                     </div>
                     <div class="input-field">
-                        <input type="text" class="datepicker" id="date" name="date">
+                        <input type="text" class="datepicker" id="date" name="date" value="<?php echo htmlspecialchars($date) ?>">
                         <label for="date">Choose a date you need me for...</label>
+                        <div class="red-text"><?php echo $errors['date']; ?></div>
                     </div>
                     <div class="input-field">
                         <p>Services required...</p>
@@ -254,16 +325,16 @@
                 <div class="col s12 l4 offset-l2">
                     <h5>Connect</h5>
                     <ul>
-                        <li><a href="" class="grey-text text-lighten-3">Facebook</a></li>
+                        <li><a href="https://github.com/mariiasharkovskaya" class="grey-text text-lighten-3">GitHub</a></li>
                         <li><a href="" class="grey-text text-lighten-3">Twitter</a></li>
-                        <li><a href="" class="grey-text text-lighten-3">LinkedIn</a></li>
-                        <li><a href="" class="grey-text text-lighten-3">Instagram</a></li>
+                        <li><a href="https://www.linkedin.com/in/mariia-sharkovska-578729273/" class="grey-text text-lighten-3">LinkedIn</a></li>
+                        <li><a href="oscillations.php" class="grey-text text-lighten-3">Oscillations</a></li>
                     </ul>
                 </div>
             </div>
         </div>
         <div class="footer-copyright grey darken-4">
-            <div class="container center-align">&copy; 2024 Materialize Practice</div>
+            <div class="container center-align">&copy; 2025 Materialize Practice</div>
         </div>
     </footer>
     <!-- Compiled and minified JavaScript -->

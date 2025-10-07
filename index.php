@@ -51,10 +51,20 @@
         if(empty($_POST['x_value'])){
             $errors['x_value'] = 'An x value is required';
         } else {
-            $x = escapeshellarg($_POST['x_value']);
-            $output = shell_exec("./cos_calc $x");
-            echo "<p>cos($x) = $output</p>";
+            $x_value = escapeshellarg($_POST['x_value']);
+            $output = shell_exec("./cos_calc $x_value");
+
+            $clean_x = htmlspecialchars(trim($_POST['x_value'], "'\""));
+            $clean_output = htmlspecialchars(trim($output));
+            echo '
+                <div style="margin-top: 20px; border-left: 4px solid #ffd600; padding: 15px;">
+                    <p class="flow-text grey-text text-darken-4">
+                        cos(' . $clean_x . ') = <strong>' . $clean_output . '</strong>
+                    </p>
+                </div>
+            ';
         }
+        exit;
 
         if(count($errors) > 0){
             foreach($errors as $error){
@@ -62,6 +72,7 @@
             }
         }
     }
+    
 ?>
 
 <!DOCTYPE html>
@@ -223,17 +234,18 @@
                         Donec eu nibh fringilla, dignissim arcu eu, ultrices ante. Cras
                         consectetur risus id mi condimentum aliquam.</p>
                 </div> -->
-                <form action="index.php" method="POST">
+                <form id="cosForm" action="index.php" method="POST">
                     <div class="col s12" id="taylor">
                         <p class="flow-text grey-text text-darken-4">Calculate cos(x)</p>
                         <div class="input-field">
                             <i class="material-icons prefix">x_value</i>
-                            <input type="number" id="x_value" name="x_value" step="any" value="<?php echo htmlspecialchars($x_value) ?>">
+                            <input type="number" id="x_value" name="x_value" step="any" value="<?php echo htmlspecialchars($x_value ?? ''); ?>">
                             <label for="x_value">Enter x</label>
                         </div>
                         <div class="input-text center">
                             <button class="btn" name="calculate">Calculate</button>
                         </div>
+                        <div id="blue-card" style="margin-top: 20px;"></div>
                     </div>
                 </form>
                 <div class="col s12" id="editing">
@@ -309,7 +321,7 @@
             </div>
         </div>
     </section>
-    <!-- footer -->
+
     <footer class="page-footer grey darken-4">
         <div class="container">
             <div class="row">
@@ -337,7 +349,7 @@
             <div class="container center-align">&copy; 2025 Materialize Practice</div>
         </div>
     </footer>
-    <!-- Compiled and minified JavaScript -->
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
@@ -355,6 +367,20 @@
             });
             $('.tooltipped').tooltip();
             $('.scrollspy').scrollSpy();
+        });
+        document.getElementById('cosForm').addEventListener('submit', function(event){
+            event.preventDefault();
+            const xValue = document.getElementById('x_value').value;
+            fetch('index.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'calculate=1&x_value=' + encodeURIComponent(xValue)
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('blue-card').innerHTML = data;
+            })
+            .catch(error => console.error('Error:', error));
         });
     </script>
 </body>

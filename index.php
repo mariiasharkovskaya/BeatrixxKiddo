@@ -23,10 +23,8 @@
             $message = $_POST['message'];
         }
 
-        if(count($errors) > 0){
-            foreach($errors as $error){
-                // echo $error . '<br />';
-            }
+        if(array_filter($errors)){
+            //echo 'errors in form';
         } else {
             $email = mysqli_real_escape_string($conn, $_POST['email']);
             $message = mysqli_real_escape_string($conn, $_POST['message']);
@@ -39,7 +37,6 @@
 
             if(mysqli_query($conn, $sql)){
                 header('Location: success.php');
-                exit();
             } else {
                 echo 'query error: ' . mysqli_error($conn);
             }

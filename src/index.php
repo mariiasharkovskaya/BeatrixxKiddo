@@ -2,7 +2,7 @@
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
-    include('config/db_connect.php');
+    include('./../config/db_connect.php');
 
     $email = $title = $date = $message = '';
     $errors = array('email'=>'', 'date'=>'');
@@ -54,7 +54,7 @@
         else {
             $x_value = escapeshellarg($_POST['x_value']);
             $eps_value = escapeshellarg($_POST['eps_value']);
-            $output = shell_exec("./cos_calc_eps $x_value $eps_value");
+            $output = shell_exec("./../bin/cos_calc_eps $x_value $eps_value");
 
             $clean_x = htmlspecialchars(trim($_POST['x_value'], "'\""));
             $clean_output = htmlspecialchars(trim($output));
@@ -91,16 +91,16 @@
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
     <title>Photo Ninja</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="./../public/css/style.css" />
 </head>
 
 <body>
-    <?php include 'includes/header.php'; ?>
+    <?php include './../includes/header.php'; ?>
     <!-- photo / grid -->
     <section class="container section scrollspy" id="photos">
         <div class="row">
             <div class="col s12 l4 ">
-                <img src="img/Angel_A.webp" alt="" class="responsive-img materialboxed">
+                <img src="./../public/img/Angel_A.webp" alt="" class="responsive-img materialboxed">
             </div>
             <div class="col s12 l4 offset-l1">
                 <h2 class="grey-text text-darken-4">Love</h2>
@@ -112,7 +112,7 @@
         </div>
         <div class="row">
             <div class="col s12 l4 push-l5 offset-l1">
-                <img src="img/biggersplash.jpg" alt="" class="responsive-img materialboxed">
+                <img src="./../public/img/biggersplash.jpg" alt="" class="responsive-img materialboxed">
             </div>
             <div class="col s12 l4 pull-l4">
                 <h2 class="grey-text text-darken-4">Lust</h2>
@@ -124,7 +124,7 @@
         </div>
         <div class="row">
             <div class="col s12 l4">
-                <img src="img/nikita.avif" alt="" class="responsive-img materialboxed">
+                <img src="./../public/img/nikita.avif" alt="" class="responsive-img materialboxed">
             </div>
             <div class="col s12 l4 offset-l1">
                 <h2 class="grey-text text-darken-4">Liberation</h2>
@@ -138,7 +138,7 @@
     <!-- parallax -->
     <div class="parallax-container">
         <div class="parallax">
-            <img src="img/tarantino.jpg" alt="" class="responsive-img">
+            <img src="./../public/img/tarantino.jpg" alt="" class="responsive-img">
         </div>
     </div>
     <!-- services / tabs -->
@@ -196,7 +196,7 @@
     </section>
     <div class="parallax-container">
         <div class="parallax">
-            <img src="img/tarantinp.jpg" alt="" class="responsive-img">
+            <img src="./../public/img/tarantino.jpg" alt="" class="responsive-img">
         </div>
     </div>
 
@@ -253,11 +253,11 @@
         </div>
     </section>
 
-    <?php include 'includes/footer.php'; ?>
+    <?php include './../includes/footer.php'; ?>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="js/main.js"></script>
+    <script src="./../public/js/main.js"></script>
 </body>
 
 </html>

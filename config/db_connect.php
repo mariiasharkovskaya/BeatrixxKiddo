@@ -1,7 +1,13 @@
 <?php
-    $conn = mysqli_connect('localhost', 'mariia', 'mariiagfhjkm', 'beatrix_kiddo');
+    $servername = "mysql-service.beatrixkiddo-database.svc.cluster.local";
+    $username = "admin";
+    $password = "I0Sw5Zxd";
+    $dbname = "beatrixkiddo";
 
-    if(!$conn) {
-        echo 'Connection error: ' .mysqli_connect_error();
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
     }
+    //echo "Connected successfully";
 ?>

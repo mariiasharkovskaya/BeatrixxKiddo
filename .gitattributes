@@ -1,0 +1,4 @@
+*.cpp linguist-primary=true
+*.php linguist-primary=true
+*.js linguist-primary=true
+*.css linguist-primary=true

@@ -1,7 +1,7 @@
 <?php
-    $servername = "mysql-service.beatrixkiddo-database.svc.cluster.local";
-    $username = "admin";
-    $password = "I0Sw5Zxd";
+    $servername = "mysql-service.beatrixkiddo-v2-database.svc.cluster.local";
+    $username = getenv('DB_USERNAME');
+    $password = getenv('DB_PASSWORD');
     $dbname = "beatrixkiddo";
 
     $conn = new mysqli($servername, $username, $password, $dbname);

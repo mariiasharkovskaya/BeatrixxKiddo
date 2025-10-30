@@ -26,28 +26,18 @@ jobs:
 
               with:
                   registry: ${{ env.DOCKER_REGISTRY }}
-                  username: ${{ vars.DOCKERHUB_USERNAME }}  
+                  username: ${{ vars.DOCKER_USERNAME }}  
                   password: ${{ secrets.DOCKERHUB_PAT }}
 
-            # - name: Build and push Docker image
-              # uses: docker/build-push-action@v6
-              # env:
-              #   DOCKER_BUILDKIT: 0
-              #   COMPOSE_DOCKER_CLI_BUILD: 0
-              # with:
-              #   context: .
-              #   file: ./Dockerfile
-              #   push: true
-              #   tags: |
-              #       
-              #       
-
-            - name: Docker Build
-              run: 
-                docker build .Dockerfile -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }} -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}:latest
-
-            - name: Docker Push
-              run: |
-                docker login -u mariiasharkovska -p ${{ secrets.DOCKERHUB_PAT }}
-                docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}:latest
-                docker push ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+            - name: Build and push Docker image
+              uses: docker/build-push-action@v6
+              env:
+                DOCKER_BUILDKIT: 0
+                COMPOSE_DOCKER_CLI_BUILD: 0
+              with:
+                context: .
+                file: ./Dockerfile
+                push: true
+                tags: |
+                    ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}:latest
+                    ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}

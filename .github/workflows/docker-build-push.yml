@@ -8,7 +8,7 @@ on:
 
 env:
   DOCKER_IMAGE_NAME: beatrixkiddo
-  DOCKER_REGISTRY: mariiasharkovska
+  DOCKER_REGISTRY: docker.io/mariiasharkovska
 
 jobs: 
     build-and-push:
@@ -29,15 +29,30 @@ jobs:
                   username: ${{ vars.DOCKERHUB_USERNAME }}  
                   password: ${{ secrets.DOCKERHUB_PAT }}
 
-            - name: Build and push Docker image
-              uses: docker/build-push-action@v6
+            # - name: Build and push Docker image
+              # uses: docker/build-push-action@v6
               # env:
               #   DOCKER_BUILDKIT: 0
               #   COMPOSE_DOCKER_CLI_BUILD: 0
+              # with:
+              #   context: .
+              #   file: ./Dockerfile
+              #   push: true
+              #   tags: |
+              #       
+              #       
+
+            - name: Docker Build
+              uses: docker/build-push-action@v4
               with:
                 context: .
                 file: ./Dockerfile
-                push: true
+                push: false
                 tags: |
-                    ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}:latest
-                    ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+                  ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}:latest
+                  ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+
+            - name: Docker Push
+              run: |
+                docker login -u mariiasharkovska -p ${{ secrets.DOCKERHUB_PAT }}
+                docker push mariiasharkovska/beatrixkiddo:latest

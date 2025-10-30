@@ -8,7 +8,7 @@ on:
 
 env:
   DOCKER_IMAGE_NAME: beatrixkiddo
-  DOCKER_REGISTRY: docker.io/mariiasharkovska
+  DOCKER_REGISTRY: mariiasharkovska
 
 jobs: 
     build-and-push:

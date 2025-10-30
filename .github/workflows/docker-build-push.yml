@@ -27,13 +27,13 @@ jobs:
               with:
                   registry: ${{ env.DOCKER_REGISTRY }}
                   username: ${{ secrets.DOCKER_USERNAME }}  
-                  password: ${{ secrets.DOCKER_PASSWORD }}
+                  password: ${{ secrets.DOCKERHUB_PAT }}
 
             - name: Build and push Docker image
               uses: docker/build-push-action@v6
-              env:
-                DOCKER_BUILDKIT: 0
-                COMPOSE_DOCKER_CLI_BUILD: 0
+              # env:
+              #   DOCKER_BUILDKIT: 0
+              #   COMPOSE_DOCKER_CLI_BUILD: 0
               with:
                 context: .
                 file: ./Dockerfile

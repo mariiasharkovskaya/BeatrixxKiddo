@@ -43,14 +43,8 @@ jobs:
               #       
 
             - name: Docker Build
-              uses: docker/build-push-action@v4
-              with:
-                context: .
-                file: ./Dockerfile
-                push: false
-                tags: |
-                  ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}:latest
-                  ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}
+              run: 
+                docker build ./../../Dockerfile -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }} -t ${{ env.DOCKER_REGISTRY }}/${{ env.DOCKER_IMAGE_NAME }}:latest
 
             - name: Docker Push
               run: |

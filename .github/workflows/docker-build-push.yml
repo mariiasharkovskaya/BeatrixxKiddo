@@ -26,7 +26,7 @@ jobs:
 
               with:
                   registry: ${{ env.DOCKER_REGISTRY }}
-                  username: ${{ vars.DOCKER_USERNAME }}  
+                  username: ${{ vars.DOCKERHUB_USERNAME }}  
                   password: ${{ secrets.DOCKERHUB_PAT }}
 
             - name: Build and push Docker image

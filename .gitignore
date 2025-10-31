@@ -5,3 +5,4 @@ manage.php
 forcedOsc.exe
 index-draft.php
 public/img/me.webp
+.build-push-job.yaml

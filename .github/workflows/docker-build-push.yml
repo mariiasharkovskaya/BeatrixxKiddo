@@ -27,7 +27,7 @@ jobs:
               with:
                   registry: ${{ env.DOCKER_REGISTRY }}
                   username: ${{ vars.DOCKERHUB_USERNAME }}  
-                  password: ${{ secrets.DOCKERHUB_TOKENDOCKERHUB_READ_WRITE_TOKEN }}
+                  password: ${{ secrets.DOCKERHUB_READ_WRITE_TOKEN }}
 
             - name: Build and push Docker image
               uses: docker/build-push-action@v6
